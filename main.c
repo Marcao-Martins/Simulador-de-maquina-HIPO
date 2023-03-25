@@ -1,4 +1,4 @@
-/* Marcos Martins de Oliveira Pacheco 13672602 */
+/* Substitua por seu nome e seu número USP */
 
 /* O processador executa instruções a partir do endereço zero.
  * as instruções DDF e DFF não precisam ser codificadas.
@@ -18,6 +18,10 @@ void loadM(char *imgFileName) {
     int i = 0;
     while (!feof(fp)) {
         printf("lendo linha %d ", i);
+        /* quem escrever o conteúdo da memória deve ter o cuidado de fazê-lo 
+         * conforme a especificação. Esta função não checa. */
+        /* podem acontecer coisas inesperadas caso falte ou sobre \n no arquivo. 
+         * */
         fscanf(fp, "%d\n", &(M[i]));
         printf("conteúdo: %d ", M[i]);
         ++i;
@@ -32,87 +36,71 @@ void dumpM() {
 }
 
 int acc;
-int pc;
-int mbr;
+int pc;  // ou ai
+int mbr; // talvez não seja necessário.
 
 void executa() {
     puts("Execução:");
+    /* insira seu programa aqui. */
+    /* caso crie outras funções, crie neste arquivo (e chame-as aqui ou onde
+     * for conveniente */
 
-    int halt = 0;
-    pc = 0; // pc deve começar em zero
+    pc = 0; // inicializa o program counter
 
-    while (!halt) {
-        // busca a instrução na memória
+    while (1) {
+        // pega a instrução do endereço apontado por pc
         mbr = M[pc];
-        pc++;
 
-        // decodifica a instrução
+        // separa o código da operação e o endereço de memória
         int opcode = mbr / 100;
-        int operand = mbr % 100;
+        int address = mbr % 100;
 
-        // executa a instrução
+        // executa a instrução de acordo com o opcode
         switch (opcode) {
-            case 10: // LDA
-                acc = M[operand];
+            case 5:
+                acc = M[address];
                 break;
-            case 11: // STA
-                M[operand] = acc;
+            case 1:
+                acc += M[address];
                 break;
-            case 20: // ADD
-                acc += M[operand];
+            case 2:
+                acc -= M[address];
                 break;
-            case 21: // SUB
-                acc -= M[operand];
+            case 3:
+                M[address] = acc;
                 break;
-            case 30: // JMP
-                pc = operand;
-                break;
-            case 31: // JGE
-                if (acc >= 0) {
-                    pc = operand;
-                }
-                break;
-            case 32: // JG
-                if (acc > 0) {
-                    pc = operand;
-                }
-                break;
-            case 33: // JL
-                if (acc < 0) {
-                    pc = operand;
-                }
-                break;
-            case 34: // JLE
-                if (acc <= 0) {
-                    pc = operand;
-                }
-                break;
-            case 40: // INP
-                printf("Digite um valor: ");
-                scanf("%d", &acc);
-                break;
-            case 41: // OUT
+            case 4:
+                pc = address;
+                continue; // pula a atualização do PC
+            case 6:
                 printf("%d\n", acc);
                 break;
-            case 42: // OTS
-                printf("%c", acc);
-                break;
-            case 43: // HALT
-                halt = 1;
+            case 7:
+                exit(0);
                 break;
             default:
-                printf("Instrução inválida: %d\n", opcode);
-                halt = 1;
-                break;
+                printf("Instrução inválida: %d\n", mbr);
+                exit(1);
         }
+
+        // incrementa o program counter
+        pc++;
     }
 }
 
 int main(int argc, char *argv[]) {
     puts("Hello");
     if (argc > 1) {
+        /* Um computador frequentemente tem um programa que carrega um 
+         * executável na memória. Esse programa é mais complicado que o tipo
+         * de programa que é suficiente para oferecer um entendimento básico
+         * dos conceitos que quero explorar na disciplina. Por isso, a carga de
+         * um programa na memória, neste simulador, é algo feito "por fora"
+         * da simulação.
+         * */
         loadM(argv[1]);
         dumpM();
         executa();
     }
-}
+    }
+   
