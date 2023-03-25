@@ -55,35 +55,123 @@ void executa() {
         int opcode = mbr / 100;
         int address = mbr % 100;
 
-        // executa a instrução de acordo com o opcode
         switch (opcode) {
-            case 5:
-                acc = M[address];
-                break;
-            case 1:
-                acc += M[address];
-                break;
-            case 2:
-                acc -= M[address];
-                break;
-            case 3:
-                M[address] = acc;
-                break;
-            case 4:
-                pc = address;
-                continue; // pula a atualização do PC
-            case 6:
-                printf("%d\n", acc);
-                break;
-            case 7:
-                exit(0);
-                break;
-            default:
-                printf("Instrução inválida: %d\n", mbr);
-                exit(1);
-        }
 
-        // incrementa o program counter
+            case 11:
+    acc = M[address];
+    break;
+        
+case 12:
+    M[address] = acc;
+    break;
+        
+case 21:
+    acc += M[address];
+    break;
+
+case 22:
+    acc -= M[address];
+    break;
+
+case 23:
+    acc *= M[address];
+    break;
+
+case 24:
+    if (M[address] == 0) {
+        printf("Erro: divisão por zero\n");
+        exit(1);
+    }
+    acc /= M[address];
+    break;
+
+case 25:
+    if (M[address] == 0) {
+        printf("Erro: divisão por zero\n");
+        exit(1);
+    }
+    acc %= M[address];
+    break;
+
+case 31:
+    printf("Digite um número: ");
+    scanf("%d", &M[address]);
+    break;
+
+case 41:
+    printf("%d\n", M[address]);
+    break;
+
+case 50:
+    // NOP (não faz nada)
+    break;
+
+case 51:
+    // DES (desvio incondicional)
+    pc = address;
+    break;
+
+case 52:
+    // DPO (desvio se positivo)
+    if (acc > 0) {
+        pc = address;
+    }
+    break;
+
+case 53:
+    // DPZ (desvio se positivo ou zero)
+    if (acc >= 0) {
+        pc = address;
+    }
+    break;
+
+case 54:
+    // DNE (desvio se negativo)
+    if (acc < 0) {
+        pc = address;
+    }
+    break;
+
+case 55:
+    // DNZ (desvio se negativo ou zero)
+    if (acc <= 0) {
+        pc = address;
+    }
+    break;
+
+case 56:
+    // DDZ (desvio se diferente de zero)
+    if (acc != 0) {
+        pc = address;
+    }
+    break;
+
+case 57:
+    // DZZ (desvio se zero)
+    if (acc == 0) {
+        pc = address;
+    }
+    break;
+
+case 61:
+    // ADE (deslocamento à esquerda)
+    acc /= 10;
+    break;
+
+case 62:
+    // ADD (deslocamento à direita)
+    acc *= 10;
+    break;
+
+case 70:
+    // PAR (parada do programa)
+    exit(0);
+
+default:
+    printf("Instrução inválida: %d\n", mbr);
+    exit(1);
+
+        }
         pc++;
     }
 }
