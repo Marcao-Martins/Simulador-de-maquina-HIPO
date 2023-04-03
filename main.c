@@ -155,12 +155,15 @@ case 57:
 
 case 61:
     // ADE (deslocamento à esquerda)
-    acc /= 10;
+    int temp = acc;
+    acc = temp % 100000;
+    acc *= 10;
     break;
 
 case 62:
     // ADD (deslocamento à direita)
-    acc *= 10;
+    int temp = acc;
+    acc = temp / 10;
     break;
 
 case 70:
