@@ -156,8 +156,7 @@ case 57:
 case 61:
     // ADE (deslocamento à esquerda)
     int temp = acc;
-    acc = temp % 100000;
-    acc *= 10;
+    acc = temp % 1000;
     break;
 
 case 62:
